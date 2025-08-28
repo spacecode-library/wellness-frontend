@@ -1,0 +1,7 @@
+# First, backup your current branch
+git branch backup-main
+
+# Remove the directories from all commits
+git filter-branch --force --index-filter \
+  'git rm -r --cached --ignore-unmatch Desktop/ "**/Obsidian-Notes/"' \
+  --prune-empty --tag-name-filter cat -- --all
