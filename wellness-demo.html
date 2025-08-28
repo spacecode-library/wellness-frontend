@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WellnessAI Platform - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Premium Wellness Color Palette */
+            --primary: #add0b3;
+            --primary-dark: #8db593;
+            --text-primary: #3C4142;
+            --text-secondary: #6B7280;
+            --background: #FFFFFF;
+            --background-secondary: #F5F5F7;
+            --accent: #007AFF;
+            --success: #34C759;
+            --warning: #FF9500;
+            --danger: #FF3B30;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--background);
+            box-shadow: var(--shadow);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-dark);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 20px;
+            padding: 3rem;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            color: var(--success);
+            margin-top: 0.5rem;
+        }
+
+        /* Daily Check-in */
+        .checkin-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .mood-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .mood-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .mood-option:hover {
+            transform: scale(1.1);
+        }
+
+        .mood-emoji {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .mood-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .mood-option.selected .mood-emoji {
+            background: var(--primary);
+            border-radius: 50%;
+            padding: 0.5rem;
+        }
+
+        /* Input Field */
+        .feedback-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--background-secondary);
+            border-radius: 12px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        .feedback-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Button */
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(173, 208, 179, 0.4);
+        }
+
+        /* Quick Actions */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .action-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .action-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: var(--background-secondary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mood-selector {
+                gap: 1rem;
+            }
+            
+            .mood-emoji {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">🌱 WellnessAI</div>
+            <div class="nav-links">
+                <a href="#" class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link">Check-in</a>
+                <a href="#" class="nav-link">Rewards</a>
+                <a href="#" class="nav-link">Insights</a>
+                <div class="user-avatar">JD</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">Good morning, John! 👋</h1>
+            <p class="welcome-subtitle">How are you feeling today? Let's check in on your wellbeing.</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Wellness Score</div>
+                <div class="stat-value">8.5</div>
+                <div class="stat-change">↑ 12% from last week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Happy Coins</div>
+                <div class="stat-value">750</div>
+                <div class="stat-change">+50 earned today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Check-in Streak</div>
+                <div class="stat-value">14 days</div>
+                <div class="stat-change">Keep it up! 🔥</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Team Rank</div>
+                <div class="stat-value">#3</div>
+                <div class="stat-change">↑ 2 positions</div>
+            </div>
+        </div>
+
+        <!-- Daily Check-in Section -->
+        <div class="checkin-section">
+            <h2 class="section-title">Daily Wellbeing Check-in</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Take a moment to reflect on how you're feeling</p>
+            
+            <div class="mood-selector">
+                <div class="mood-option" onclick="selectMood(this, 1)">
+                    <div class="mood-emoji">😔</div>
+                    <span class="mood-label">Very Low</span>
+                </div>
+                <div class="mood-option" onclick="selectMood(this, 2)">
+                    <div class="mood-emoji">😕</div>
+                    <span class="mood-label">Low</span>
+                </div>
+                <div class="mood-option" onclick="selectMood(this, 3)">
+                    <div class="mood-emoji">😐</div>
+                    <span class="mood-label">Neutral</span>
+                </div>
+                <div class="mood-option" onclick="selectMood(this, 4)">
+                    <div class="mood-emoji">😊</div>
+                    <span class="mood-label">Good</span>
+                </div>
+                <div class="mood-option" onclick="selectMood(this, 5)">
+                    <div class="mood-emoji">😄</div>
+                    <span class="mood-label">Great</span>
+                </div>
+            </div>
+
+            <textarea class="feedback-input" placeholder="Any thoughts you'd like to share? (Optional)"></textarea>
+            
+            <button class="btn" onclick="submitCheckIn()">Submit Check-in</button>
+        </div>
+
+        <!-- Quick Actions -->
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="actions-grid">
+            <div class="action-card">
+                <div class="action-icon">📊</div>
+                <div class="action-title">Weekly Survey</div>
+                <div class="action-description">3 quick questions</div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">🎁</div>
+                <div class="action-title">Browse Rewards</div>
+                <div class="action-description">Redeem your coins</div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">📖</div>
+                <div class="action-title">Wellness Resources</div>
+                <div class="action-description">Articles & tips</div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">🏆</div>
+                <div class="action-title">Challenges</div>
+                <div class="action-description">Join team activities</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <h2 class="section-title">Your Wellness Journey</h2>
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Mood Trends</h3>
+                <div class="chart-placeholder">
+                    📈 Interactive mood chart will display here
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Team Engagement</h3>
+                <div class="chart-placeholder">
+                    📊 Team wellness metrics will display here
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectMood(element, value) {
+            // Remove selected class from all options
+            document.querySelectorAll('.mood-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Store the selected mood value
+            window.selectedMood = value;
+        }
+
+        function submitCheckIn() {
+            if (!window.selectedMood) {
+                alert('Please select how you\'re feeling today');
+                return;
+            }
+            
+            alert(`Check-in submitted! You earned 50 Happy Coins! 🎉\n\nYour mood: ${window.selectedMood}/5`);
+        }
+    </script>
+</body>
+</html>
