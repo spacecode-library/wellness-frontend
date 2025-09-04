@@ -889,6 +889,12 @@ class WellnessAPI {
     return await this.request('/integrations/slack/status');
   }
 
+  async getSlackOAuthUrl() {
+    return await this.request('/integrations/slack/oauth-url', {
+      method: 'GET',
+    });
+  }
+
   async connectSlack() {
     return await this.request('/integrations/slack/connect', {
       method: 'POST',

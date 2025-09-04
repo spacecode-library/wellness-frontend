@@ -39,11 +39,11 @@ function SlackIntegrationCard() {
   const handleConnect = async () => {
     try {
       setConnecting(true);
-      const response = await api.connectSlack();
+      const response = await api.getSlackOAuthUrl();
       
-      if (response.success && response.data.authUrl) {
+      if (response.success && response.data.url) {
         // Redirect to Slack OAuth
-        window.location.href = response.data.authUrl;
+        window.location.href = response.data.url;
       } else {
         throw new Error('Failed to get authorization URL');
       }
